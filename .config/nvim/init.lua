@@ -15,6 +15,7 @@ require('packer').startup(function(use)
       tag = "0.1.8",
       requires = { { 'nvim-lua/plenary.nvim','nvim-tree/nvim-web-devicons' }}
     }
+    use 'feline-nvim/feline.nvim'
     -- Colorschemes
     use 'morhetz/gruvbox'
 end)
@@ -61,6 +62,18 @@ require('nvim-web-devicons').setup {
   default = true;
 }
 
+require('feline').setup({
+  theme = {
+      bg = '#1E1E1E',
+      fg = '#FFFFFF',
+      yellow = '#DCDCAA',
+      cyan = '#4EC9B0',
+      green = '#6A9955',
+      orange = '#CE9178',
+      magenta = '#569CD6',
+      red = '#F44747',
+  }  
+})
 -- Keymaps
 vim.api.nvim_set_keymap('n', "<C-s>", ":w<CR>", { noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', "<C-f>", ":Telescope find_files<CR>", { noremap = true, silent = true})
