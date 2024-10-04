@@ -9,6 +9,12 @@ end
 
 require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
+    -- Fuzzy finder
+    use {
+      'nvim-telescope/telescope.nvim',
+      tag = "0.1.8",
+      requires = { { 'nvim-lua/plenary.nvim ' }}
+    }
     -- Colorschemes
     use 'morhetz/gruvbox'
 end)
@@ -31,6 +37,9 @@ opt.termguicolors = true
 opt.scrolloff = 8
 opt.signcolumn = 'yes'
 vim.cmd([[colorscheme gruvbox]])
+
+-- Setup
+require('telescope').setup()
 
 -- Keymaps
 vim.api.nvim_set_keymap('n', "<C-s>", ":w<CR>", { noremap = true, silent = true})
