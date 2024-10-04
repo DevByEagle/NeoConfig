@@ -13,7 +13,7 @@ require('packer').startup(function(use)
     use {
       'nvim-telescope/telescope.nvim',
       tag = "0.1.8",
-      requires = { { 'nvim-lua/plenary.nvim ' }}
+      requires = { { 'nvim-lua/plenary.nvim','nvim-tree/nvim-web-devicons' }}
     }
     -- Colorschemes
     use 'morhetz/gruvbox'
@@ -39,7 +39,27 @@ opt.signcolumn = 'yes'
 vim.cmd([[colorscheme gruvbox]])
 
 -- Setup
-require('telescope').setup()
+require('telescope').setup {
+  defaults = {
+    -- Add your default configurations here
+    -- This is where we enable file icons
+    layout_strategy = "flex",
+    layout_config = {
+        flex = {
+            flip_columns = 150,
+        },
+    },
+    -- Custom sorting function to include icons
+    sorting_strategy = "ascending",
+    prompt_prefix = "🔍 ", -- Change this to whatever you prefer
+    selection_caret = "👉 ", -- Change this to whatever you prefer
+    file_previewer = require('telescope.previewers').vim_buffer_cat.new,
+  }
+}
+
+require('nvim-web-devicons').setup {
+  default = true;
+}
 
 -- Keymaps
 vim.api.nvim_set_keymap('n', "<C-s>", ":w<CR>", { noremap = true, silent = true})
