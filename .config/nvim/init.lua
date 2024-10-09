@@ -13,11 +13,22 @@ require('packer').startup(function(use)
     use {
       'nvim-telescope/telescope.nvim',
       tag = "0.1.8",
-      requires = { { 'nvim-lua/plenary.nvim','nvim-tree/nvim-web-devicons' }}
+      requires = { { 'nvim-lua/plenary.nvim', 'nvim-tree/nvim-web-devicons' }}
     }
     use 'feline-nvim/feline.nvim'
     -- Colorschemes
     use 'morhetz/gruvbox'
+
+    -- Auto-completion
+    use 'hrsh7th/nvim-cmp'
+    use 'hrsh7th/cmp-nvim-lsp'
+    use 'hrsh7th/cmp-buffer'
+    use 'hrsh7th/cmp-path'
+    use 'L3MON4D3/LuaSnip'
+    use 'saadparwaiz1/cmp_luasnip'
+
+    -- LSP (Optional if you want language server support)
+    use 'neovim/nvim-lspconfig'
 end)
 
 cmd[[
@@ -42,18 +53,15 @@ vim.cmd([[colorscheme gruvbox]])
 -- Setup
 require('telescope').setup {
   defaults = {
-    -- Add your default configurations here
-    -- This is where we enable file icons
     layout_strategy = "flex",
     layout_config = {
         flex = {
             flip_columns = 150,
         },
     },
-    -- Custom sorting function to include icons
     sorting_strategy = "ascending",
-    prompt_prefix = "🔍 ", -- Change this to whatever you prefer
-    selection_caret = "👉 ", -- Change this to whatever you prefer
+    prompt_prefix = "🔍 ",
+    selection_caret = "👉 ",
     file_previewer = require('telescope.previewers').vim_buffer_cat.new,
   }
 }
@@ -74,6 +82,38 @@ require('feline').setup({
       red = '#F44747',
   }  
 })
+
+-- Auto-completion setup
+local cmp = require'cmp'
+local luasnip = require'luasnip'
+
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end,
+  },
+  mapping = {
+    ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+    ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-u>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.close(),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item.
+  },
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'luasnip' },
+    { name = 'buffer' },
+    { name = 'path' },
+  })
+})
+
+-- LSP Setup (Optional)
+local lspconfig = require'lspconfig'
+lspconfig.tsserver.setup{}
+
 -- Keymaps
 vim.api.nvim_set_keymap('n', "<C-s>", ":w<CR>", { noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', "<C-f>", ":Telescope find_files<CR>", { noremap = true, silent = true})
