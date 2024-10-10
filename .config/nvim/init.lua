@@ -16,17 +16,13 @@ require('packer').startup(function(use)
     }
     use 'feline-nvim/feline.nvim'
     use 'morhetz/gruvbox'
-    use 'hrsh7th/nvim-cmp'
-    use 'hrsh7th/cmp-nvim-lsp'
-    use 'hrsh7th/cmp-buffer'
-    use 'hrsh7th/cmp-path'
-    use 'L3MON4D3/LuaSnip'
-    use 'saadparwaiz1/cmp_luasnip'
-    use 'neovim/nvim-lspconfig'
 end)
 
-cmd[[filetype plugin indent on]]
-cmd[[syntax on]]
+cmd[[
+  filetype plugin indent on
+  syntax on
+  colorscheme gruvbox
+]]
 
 opt.number = true
 opt.relativenumber = true
@@ -40,8 +36,7 @@ opt.incsearch = true
 opt.termguicolors = true
 opt.scrolloff = 8
 opt.signcolumn = 'yes'
-vim.cmd([[colorscheme gruvbox]])
-
+-- Setup
 require('telescope').setup {
   defaults = {
     layout_strategy = "flex",
@@ -73,35 +68,6 @@ require('feline').setup({
       red = '#F44747',
   }  
 })
-
-local cmp = require'cmp'
-local luasnip = require'luasnip'
-
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end,
-  },
-  mapping = {
-    ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-    ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-u>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.close(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
-  },
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-    { name = 'buffer' },
-    { name = 'path' },
-  })
-})
-
-local lspconfig = require'lspconfig'
-lspconfig.tsserver.setup{}
 
 vim.api.nvim_set_keymap('n', "<C-s>", ":w<CR>", { noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', "<C-f>", ":Telescope find_files<CR>", { noremap = true, silent = true})
